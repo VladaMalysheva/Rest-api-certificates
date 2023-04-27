@@ -28,7 +28,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public boolean save(Tag entity) {
-        return jdbcTemplate.update(SQL_INSERT_ENTITY, entity.getId(), entity.getName()) > 0;
+        return jdbcTemplate.update(SQL_INSERT_ENTITY, entity.getName()) > 0;
     }
 
     @Override

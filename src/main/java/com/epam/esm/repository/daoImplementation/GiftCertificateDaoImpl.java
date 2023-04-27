@@ -18,7 +18,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     private final String SQL_FIND_ENTITY = "select * from gift_certificate where id = ?";
     private final String SQL_DELETE_ENTITY = "delete from gift_certificate where id = ?";
     private final String SQL_INSERT_ENTITY = "insert into gift_certificate(name, description, price, duration, create_date, last_update_date) values(?,?,?,?,?,?)";
-    private final String SQL_UPDATE_ENTITY = "insert into gift_certificate set name=?, description=?, price=?, duration=?, create_date=?, last_update_date=? where id = ?";
+    private final String SQL_UPDATE_ENTITY = "update gift_certificate set name=?, description=?, price=?, duration=?, create_date=?, last_update_date=? where id = ?";
 
     @Autowired
     public GiftCertificateDaoImpl(DataSource dataSource) {
@@ -26,7 +26,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     }
     @Override
     public boolean save(GiftCertificate entity) {
-        return jdbcTemplate.update(SQL_INSERT_ENTITY, entity.getId(), entity.getName(), entity.getDescription(),
+        return jdbcTemplate.update(SQL_INSERT_ENTITY, entity.getName(), entity.getDescription(),
                 entity.getPrice(), entity.getDuration(), entity.getCreateDate(), entity.getLastUpdateDate()) > 0;
     }
 
