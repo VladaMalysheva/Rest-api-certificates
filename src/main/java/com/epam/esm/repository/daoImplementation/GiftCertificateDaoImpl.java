@@ -1,16 +1,16 @@
 package com.epam.esm.repository.daoImplementation;
 
-import com.epam.esm.repository.daoInterfaces.GiftCertificateDaoInterface;
+import com.epam.esm.repository.daoInterfaces.GiftCertificateDao;
 import com.epam.esm.repository.entities.GiftCertificate;
 import com.epam.esm.repository.mappers.GiftCertificateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
-@Component
-public class GiftCertificateDao implements GiftCertificateDaoInterface {
+@Repository
+public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     JdbcTemplate jdbcTemplate;
 
@@ -21,7 +21,7 @@ public class GiftCertificateDao implements GiftCertificateDaoInterface {
     private final String SQL_UPDATE_ENTITY = "insert into gift_certificate set name=?, description=?, price=?, duration=?, create_date=?, last_update_date=? where id = ?";
 
     @Autowired
-    public GiftCertificateDao(DataSource dataSource) {
+    public GiftCertificateDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
     @Override
