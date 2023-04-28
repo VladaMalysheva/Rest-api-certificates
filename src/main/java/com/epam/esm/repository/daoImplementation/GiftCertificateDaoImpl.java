@@ -12,13 +12,19 @@ import java.util.List;
 @Repository
 public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
+
     JdbcTemplate jdbcTemplate;
 
+    private final String SQL_GET_BY_DESCRIPTION_OR_NAME = "select * from gift_certificate where name LIKE '%?%' or description like '%?%'"; //TODO check
+
+//    private final String SQL_GET_ALL_SORTED = "select * from gift_certificate order by name ?";
     private final String SQL_GET_ALL = "select * from gift_certificate";
     private final String SQL_FIND_ENTITY = "select * from gift_certificate where id = ?";
     private final String SQL_DELETE_ENTITY = "delete from gift_certificate where id = ?";
     private final String SQL_INSERT_ENTITY = "insert into gift_certificate(name, description, price, duration, create_date, last_update_date) values(?,?,?,?,?,?)";
     private final String SQL_UPDATE_ENTITY = "update gift_certificate set name=?, description=?, price=?, duration=?, create_date=?, last_update_date=? where id = ?";
+
+    private final String SQL_GET_BY_TAG_NAME = "select * from gift_certificate as g join certificate_tag as c on g.id=c.certificate_id join tag as t on c.tag_id = t.id where t.name like ?";
 
     @Autowired
     public GiftCertificateDaoImpl(DataSource dataSource) {
@@ -35,9 +41,11 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         return jdbcTemplate.queryForObject(SQL_FIND_ENTITY, new GiftCertificateMapper(), id);
     }
 
+
     @Override
-    public List<GiftCertificate> getAll() {
-        return jdbcTemplate.query(SQL_GET_ALL, new GiftCertificateMapper());
+    public List<GiftCertificate> getAll(String sort) {
+        String s = sort != null ? " order by name " + sort : "";
+        return jdbcTemplate.query(SQL_GET_ALL+s, new GiftCertificateMapper());
     }
 
     @Override
@@ -49,5 +57,17 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     public boolean update(GiftCertificate entity) {
         return jdbcTemplate.update(SQL_UPDATE_ENTITY, entity.getName(), entity.getDescription(),
                 entity.getPrice(), entity.getDuration(), entity.getCreateDate(), entity.getLastUpdateDate(), entity.getId()) > 0;
+    }
+
+    @Override
+    public List<GiftCertificate> getByTagName(String name, String sort) {
+        String s = sort != null ? " order by name " + sort : "";
+        return jdbcTemplate.query(SQL_GET_BY_TAG_NAME + s, new GiftCertificateMapper(), name);
+    }
+
+    @Override
+    public List<GiftCertificate> getByDescriptionOrName(String description, String sort) {
+        String s = sort != null ? " order by name " + sort : "";
+        return jdbcTemplate.query(SQL_GET_BY_DESCRIPTION_OR_NAME + s, new GiftCertificateMapper(), description);
     }
 }

@@ -7,6 +7,7 @@ import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,9 +31,20 @@ public class GreetController {
     }
 
     @GetMapping("/giftCertificates")
-    public List<GiftCertificate> showAll()
+    public List<GiftCertificate> showAll(@RequestParam(required = false) String tag, @RequestParam(required = false) String sort,@RequestParam(required = false) String description)
     {
-        return giftCertificateService.getAll();
+        if (sort!=null) {
+            if(!(sort.equalsIgnoreCase("asc")||sort.equalsIgnoreCase("desc")))throw new RuntimeException("error");
+        }
+
+        if (tag!=null) {
+            return giftCertificateService.getByTagName(tag, sort, description);
+        } else if (description!=null) {
+            return giftCertificateService.getByDescriptionOrName(description, sort);
+        } else {
+            return giftCertificateService.getAll(sort);
+        }
+
     }
 
     @PostMapping("/giftCertificates")
@@ -53,6 +65,12 @@ public class GreetController {
     {
         return giftCertificateService.delete(id);
     }
+
+//    @GetMapping("/giftCertificates/tag/{name}")
+//    public List<GiftCertificate> getCertificateByTagName(@PathVariable String name)
+//    {
+//        return giftCertificateService.getByTagName(name);
+//    }
 
 
     @GetMapping("/tags/{id}")

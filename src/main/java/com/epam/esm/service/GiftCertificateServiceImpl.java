@@ -1,12 +1,11 @@
 package com.epam.esm.service;
 
 import com.epam.esm.repository.daoInterfaces.GiftCertificateDao;
-import com.epam.esm.repository.daoInterfaces.TagDao;
 import com.epam.esm.repository.entities.GiftCertificate;
-import com.epam.esm.repository.entities.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -30,8 +29,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     }
 
     @Override
-    public List<GiftCertificate> getAll() {
-        return dao.getAll();
+    public List<GiftCertificate> getAll(String sort) {
+        return dao.getAll(sort);
     }
 
     @Override
@@ -42,5 +41,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     @Override
     public boolean update(GiftCertificate entity) {
         return dao.update(entity);
+    }
+
+    @Override
+    public List<GiftCertificate> getByTagName(String name, String sort, String description) {
+        List<GiftCertificate> result = new ArrayList<>();
+        result = dao.getByTagName(name, sort);
+        if(description!=null){
+            List<GiftCertificate> tagsWithDescriptionOrName = getByDescriptionOrName(description, sort);
+            result.retainAll(tagsWithDescriptionOrName);
+        }
+        return result;
+    }
+
+    @Override
+    public List<GiftCertificate> getByDescriptionOrName(String description, String sort) {
+        return dao.getByDescriptionOrName(description, sort);
     }
 }
