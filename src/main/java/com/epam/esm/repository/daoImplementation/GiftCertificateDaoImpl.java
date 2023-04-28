@@ -15,7 +15,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     JdbcTemplate jdbcTemplate;
 
-    private final String SQL_GET_BY_DESCRIPTION_OR_NAME = "select * from gift_certificate where name LIKE '%?%' or description like '%?%'"; //TODO check
+    private final String SQL_GET_BY_DESCRIPTION_OR_NAME = "select * from gift_certificate where name LIKE ? or description like ?";
 
 //    private final String SQL_GET_ALL_SORTED = "select * from gift_certificate order by name ?";
     private final String SQL_GET_ALL = "select * from gift_certificate";
@@ -45,6 +45,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
     @Override
     public List<GiftCertificate> getAll(String sort) {
         String s = sort != null ? " order by name " + sort : "";
+        System.out.println(SQL_GET_ALL+s);
         return jdbcTemplate.query(SQL_GET_ALL+s, new GiftCertificateMapper());
     }
 
@@ -61,13 +62,15 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public List<GiftCertificate> getByTagName(String name, String sort) {
-        String s = sort != null ? " order by name " + sort : "";
+        String s = sort != null ? " order by g.name " + sort : "";
+        System.out.println(SQL_GET_BY_TAG_NAME + s);
         return jdbcTemplate.query(SQL_GET_BY_TAG_NAME + s, new GiftCertificateMapper(), name);
     }
 
     @Override
     public List<GiftCertificate> getByDescriptionOrName(String description, String sort) {
         String s = sort != null ? " order by name " + sort : "";
-        return jdbcTemplate.query(SQL_GET_BY_DESCRIPTION_OR_NAME + s, new GiftCertificateMapper(), description);
+        System.out.println(SQL_GET_BY_DESCRIPTION_OR_NAME + s);
+        return jdbcTemplate.query(SQL_GET_BY_DESCRIPTION_OR_NAME + s, new GiftCertificateMapper(), "%"+description+"%", "%"+description+"%");
     }
 }

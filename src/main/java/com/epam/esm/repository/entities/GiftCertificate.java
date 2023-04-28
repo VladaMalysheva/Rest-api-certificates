@@ -1,6 +1,7 @@
 package com.epam.esm.repository.entities;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class GiftCertificate {
     private int id;
@@ -100,5 +101,17 @@ public class GiftCertificate {
                 ", createDate=" + createDate +
                 ", lastUpdateDate=" + lastUpdateDate +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GiftCertificate that)) return false;
+        return getId() == that.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

@@ -47,9 +47,13 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     public List<GiftCertificate> getByTagName(String name, String sort, String description) {
         List<GiftCertificate> result = new ArrayList<>();
         result = dao.getByTagName(name, sort);
+        System.out.println(result);
         if(description!=null){
             List<GiftCertificate> tagsWithDescriptionOrName = getByDescriptionOrName(description, sort);
+            System.out.println(tagsWithDescriptionOrName);
             result.retainAll(tagsWithDescriptionOrName);
+            System.out.println(result);
+
         }
         return result;
     }
