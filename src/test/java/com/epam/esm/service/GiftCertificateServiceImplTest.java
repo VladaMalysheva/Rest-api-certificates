@@ -11,6 +11,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -31,10 +33,18 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void save() {
+        GiftCertificate certificate = new GiftCertificate("Test Certificate", "Test description", 12.00f, 5, null, null);
+    service.save(certificate);
+
+
     }
 
     @Test
     void getById() {
+        //when
+        service.getById(7);
+        //then
+        verify(dao).getById(7);
     }
 
     @Test
@@ -47,6 +57,8 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void delete() {
+        service.delete(1);
+        verify(dao).delete(1);
     }
 
     @Test
@@ -62,6 +74,21 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void getByDescriptionOrName() {
+        service.getByDescriptionOrName("example of description", "asc");
+        verify(dao).getByDescriptionOrName("example of description", "asc");
+    }
+
+    @Test
+    void getByTag(){
+
+        service.getByTagName("name", "asc", "description");
+        verify(dao).getByTagName("name", "asc");
+        verify(dao).getByDescriptionOrName("description", "asc");
+
+        service.getByTagName("name2", "asc", null);
+        verify(dao).getByTagName("name2", "asc");
+        verify(dao, never()).getByDescriptionOrName(null, "asc");
+
     }
 
 }
