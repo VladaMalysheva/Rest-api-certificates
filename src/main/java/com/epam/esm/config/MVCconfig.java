@@ -31,7 +31,7 @@ public class MVCconfig {
     public DataSource mysqlDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/test_task");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/rest_task");
         dataSource.setUsername("root");
         dataSource.setPassword("admin");
 
