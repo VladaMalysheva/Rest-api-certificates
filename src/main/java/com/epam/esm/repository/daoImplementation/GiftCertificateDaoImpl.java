@@ -4,12 +4,15 @@ import com.epam.esm.repository.daoInterfaces.GiftCertificateDao;
 import com.epam.esm.repository.entities.GiftCertificate;
 import com.epam.esm.repository.mappers.GiftCertificateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
 @Repository
+@Component
 public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
 

@@ -14,6 +14,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService{
     @Autowired
     private GiftCertificateDao dao;
 
+    @Autowired
     public GiftCertificateServiceImpl(GiftCertificateDao dao) {
         this.dao = dao;
     }
