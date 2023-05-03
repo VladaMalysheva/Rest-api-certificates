@@ -1,17 +1,29 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.errorHandling.DbException;
+import com.epam.esm.errorHandling.ErrorResponse;
 import com.epam.esm.repository.entities.GiftCertificate;
 import com.epam.esm.repository.entities.Tag;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class GreetController {
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(DbException exc){
+        ErrorResponse err = new ErrorResponse();
+        err.setErrorCode(exc.getErrorCode());
+        err.setMessage(exc.getMessage());
+        err.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(err, HttpStatus.valueOf(exc.getStatus()));
+    }
 
     @Autowired
     private GiftCertificateService giftCertificateService;
