@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 @Repository
 @Component
@@ -34,46 +35,60 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
     @Override
-    public boolean save(GiftCertificate entity) {
-        return jdbcTemplate.update(SQL_INSERT_ENTITY, entity.getName(), entity.getDescription(),
+    public boolean save(GiftCertificate entity) throws SQLException {
+        boolean b = jdbcTemplate.update(SQL_INSERT_ENTITY, entity.getName(), entity.getDescription(),
                 entity.getPrice(), entity.getDuration(), entity.getCreateDate(), entity.getLastUpdateDate()) > 0;
+        if (!b) throw new SQLException();
+        return true;
     }
 
     @Override
-    public GiftCertificate getById(int id) {
-        return jdbcTemplate.queryForObject(SQL_FIND_ENTITY, new GiftCertificateMapper(), id);
+    public GiftCertificate getById(int id) throws SQLException {
+        GiftCertificate certificate = jdbcTemplate.queryForObject(SQL_FIND_ENTITY, new GiftCertificateMapper(), id);
+        if (certificate == null) throw new SQLException();
+        return certificate;
     }
 
 
     @Override
-    public List<GiftCertificate> getAll(String sort) {
+    public List<GiftCertificate> getAll(String sort) throws SQLException {
         String s = sort != null ? " order by name " + sort : "";
         System.out.println(SQL_GET_ALL+s);
-        return jdbcTemplate.query(SQL_GET_ALL+s, new GiftCertificateMapper());
+        List<GiftCertificate> query = jdbcTemplate.query(SQL_GET_ALL + s, new GiftCertificateMapper());
+        if (query.isEmpty()) throw new SQLException();
+        return query;
     }
 
     @Override
-    public boolean delete(int id) {
-        return jdbcTemplate.update(SQL_DELETE_ENTITY, id) > 0;
+    public boolean delete(int id) throws SQLException {
+        boolean b = jdbcTemplate.update(SQL_DELETE_ENTITY, id) > 0;
+        if (!b) throw new SQLException();
+        return true;
     }
 
     @Override
-    public boolean update(GiftCertificate entity) {
-        return jdbcTemplate.update(SQL_UPDATE_ENTITY, entity.getName(), entity.getDescription(),
+    public boolean update(GiftCertificate entity) throws SQLException {
+        boolean b = jdbcTemplate.update(SQL_UPDATE_ENTITY, entity.getName(), entity.getDescription(),
                 entity.getPrice(), entity.getDuration(), entity.getCreateDate(), entity.getLastUpdateDate(), entity.getId()) > 0;
+        if (!b) throw new SQLException();
+        return true;
     }
 
     @Override
-    public List<GiftCertificate> getByTagName(String name, String sort) {
+    public List<GiftCertificate> getByTagName(String name, String sort) throws SQLException {
         String s = sort != null ? " order by g.name " + sort : "";
         System.out.println(SQL_GET_BY_TAG_NAME + s);
-        return jdbcTemplate.query(SQL_GET_BY_TAG_NAME + s, new GiftCertificateMapper(), name);
+        List<GiftCertificate> query = jdbcTemplate.query(SQL_GET_BY_TAG_NAME + s, new GiftCertificateMapper(), name);
+        if (query.isEmpty()) throw new SQLException();
+        return query;
     }
 
     @Override
-    public List<GiftCertificate> getByDescriptionOrName(String description, String sort) {
+    public List<GiftCertificate> getByDescriptionOrName(String description, String sort) throws SQLException {
         String s = sort != null ? " order by name " + sort : "";
         System.out.println(SQL_GET_BY_DESCRIPTION_OR_NAME + s);
-        return jdbcTemplate.query(SQL_GET_BY_DESCRIPTION_OR_NAME + s, new GiftCertificateMapper(), "%"+description+"%", "%"+description+"%");
+        List<GiftCertificate> query = jdbcTemplate.query(SQL_GET_BY_DESCRIPTION_OR_NAME + s, new GiftCertificateMapper(), "%" + description + "%", "%" + description + "%");
+        if (query.isEmpty()) throw new SQLException();
+        return query;
     }
 }

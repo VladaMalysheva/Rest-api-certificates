@@ -1,12 +1,29 @@
 package com.epam.esm.errorHandling;
 
+import org.springframework.http.HttpStatus;
+
 public class DbException extends RuntimeException{
     private int errorCode;
-    private int status;
-    public DbException(String message, int errorCode, int status) {
+
+    private HttpStatus status;
+
+    public DbException(String message, int errorCode, HttpStatus status) {
         super(message);
         this.errorCode=errorCode;
         this.status=status;
+    }
+
+    public DbException(String message, HttpStatus status) {
+        super(message);
+        this.status=status;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(HttpStatus status) {
+        this.status = status;
     }
 
     public int getErrorCode() {
@@ -17,11 +34,5 @@ public class DbException extends RuntimeException{
         this.errorCode = errorCode;
     }
 
-    public int getStatus() {
-        return status;
-    }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
 }

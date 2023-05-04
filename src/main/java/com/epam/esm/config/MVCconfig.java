@@ -5,12 +5,9 @@ import org.springframework.context
         .annotation.ComponentScan;
 import org.springframework.context
         .annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet
-        .config.annotation
-        .WebMvcConfigurerAdapter;
+
 
 import javax.sql.DataSource;
 
@@ -19,14 +16,6 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = "com.epam.esm")
 public class MVCconfig {
 
-
-//    @Bean
-//    public ViewResolver viewResolver(){
-//        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-//        viewResolver.setPrefix("/WEB-INF/views/");
-//        viewResolver.setSuffix(".jsp");
-//        return viewResolver;
-//    }
 
     @Bean
     public DataSource mysqlDataSource() {

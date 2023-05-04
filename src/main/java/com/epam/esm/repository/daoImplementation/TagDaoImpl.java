@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.List;
 @Repository
 public class TagDaoImpl implements TagDao {
@@ -27,22 +28,30 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public boolean save(Tag entity) {
-        return jdbcTemplate.update(SQL_INSERT_ENTITY, entity.getName()) > 0;
+    public boolean save(Tag entity) throws SQLException {
+        boolean b = jdbcTemplate.update(SQL_INSERT_ENTITY, entity.getName()) > 0;
+        if (!b) throw new SQLException();
+        return true;
     }
 
     @Override
-    public Tag getById(int id) {
-        return jdbcTemplate.queryForObject(SQL_FIND_ENTITY, new TagMapper(), id);
+    public Tag getById(int id) throws SQLException {
+        Tag tag = jdbcTemplate.queryForObject(SQL_FIND_ENTITY, new TagMapper(), id);
+        if (tag == null) throw new SQLException();
+        return tag;
     }
 
     @Override
-    public List<Tag> getAll() {
-        return jdbcTemplate.query(SQL_GET_ALL, new TagMapper());
+    public List<Tag> getAll() throws SQLException {
+        List<Tag> query = jdbcTemplate.query(SQL_GET_ALL, new TagMapper());
+        if (query.isEmpty()) throw new SQLException();
+        return query;
     }
 
     @Override
-    public boolean delete(int id) {
-        return jdbcTemplate.update(SQL_DELETE_ENTITY, id) > 0;
+    public boolean delete(int id) throws SQLException {
+        boolean b = jdbcTemplate.update(SQL_DELETE_ENTITY, id) > 0;
+        if (!b) throw new SQLException();
+        return b;
     }
 }

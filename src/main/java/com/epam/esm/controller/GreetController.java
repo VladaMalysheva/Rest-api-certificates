@@ -22,7 +22,7 @@ public class GreetController {
         err.setErrorCode(exc.getErrorCode());
         err.setMessage(exc.getMessage());
         err.setTimeStamp(System.currentTimeMillis());
-        return new ResponseEntity<>(err, HttpStatus.valueOf(exc.getStatus()));
+        return new ResponseEntity<>(err, exc.getStatus());
     }
 
     @Autowired
