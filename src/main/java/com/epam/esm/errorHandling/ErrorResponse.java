@@ -1,15 +1,13 @@
 package com.epam.esm.errorHandling;
 
-import org.springframework.http.HttpStatus;
-
 public class ErrorResponse {
 
-    private HttpStatus status;
+    private int status;
     private String message;
     private int errorCode;
     private long timeStamp;
 
-    public ErrorResponse(HttpStatus status, String message, int errorCode, long timeStamp) {
+    public ErrorResponse(int status, String message, int errorCode, long timeStamp) {
         this.status = status;
         this.message = message;
         this.errorCode = errorCode;
@@ -19,11 +17,11 @@ public class ErrorResponse {
     public ErrorResponse() {
     }
 
-    public HttpStatus getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(HttpStatus status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

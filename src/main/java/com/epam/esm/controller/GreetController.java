@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.RequestDispatcher;
@@ -21,9 +22,9 @@ import java.util.List;
 public class GreetController {
 
     @ExceptionHandler(DbException.class)
-    public ResponseEntity<ErrorResponse> handleException(DbException exc){
+    public ResponseEntity<ErrorResponse> handleDbException(DbException exc){
         ErrorResponse err = new ErrorResponse();
-        err.setStatus(exc.getStatus());
+        err.setStatus(exc.getStatus().value());
         err.setMessage(exc.getMessage());
         err.setTimeStamp(System.currentTimeMillis());
         return new ResponseEntity<>(err, exc.getStatus());
@@ -32,10 +33,19 @@ public class GreetController {
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException exc) {
         ErrorResponse err = new ErrorResponse();
-        err.setStatus(HttpStatus.NOT_FOUND);
+        err.setStatus(HttpStatus.NOT_FOUND.value());
         err.setMessage("Endpoint "+exc.getRequestURL()+" not found");
         err.setTimeStamp(System.currentTimeMillis());
         return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleAllExceptions(Exception exc) {
+        ErrorResponse err = new ErrorResponse();
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setMessage(exc.getMessage());
+        err.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 
     @Autowired
@@ -122,7 +132,7 @@ public class GreetController {
         return tagService.delete(id);
     }
 
-    @RequestMapping(value = "{path:[^\\.]*}")
+    @RequestMapping(value = "{path:[^\\\\.]*}/**")
     public void handleNotFound(HttpServletRequest request) throws NoHandlerFoundException {
         String httpMethod = request.getMethod();
         String requestUrl = request.getRequestURI();
