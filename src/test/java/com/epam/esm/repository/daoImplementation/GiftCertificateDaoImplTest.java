@@ -16,6 +16,8 @@ import org.junit.jupiter.api.BeforeEach;
 
 import javax.sql.DataSource;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @Transactional
@@ -35,7 +37,7 @@ class GiftCertificateDaoImplTest {
 
 
     @Test
-    void save() {
+    void save() throws SQLException {
         dao.save(new GiftCertificate("vlada", "this is test description", 17, 2, null, null));
 
      }

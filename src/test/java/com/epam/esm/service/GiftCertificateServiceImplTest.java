@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void getById() {
+    void getById() throws SQLException {
         //when
         service.getById(7);
         //then
@@ -48,7 +49,7 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void getAll() {
+    void getAll() throws SQLException {
         //when
         service.getAll("asc");
         //then
@@ -56,13 +57,13 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void delete() {
+    void delete() throws SQLException {
         service.delete(1);
         verify(dao).delete(1);
     }
 
     @Test
-    void update() {
+    void update() throws SQLException {
         GiftCertificate certificate = new GiftCertificate("Test Certificate", "Test description", 12.00f, 5, null, null);
         when(dao.update(certificate)).thenReturn(true);
 
@@ -73,13 +74,13 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    void getByDescriptionOrName() {
+    void getByDescriptionOrName() throws SQLException {
         service.getByDescriptionOrName("example of description", "asc");
         verify(dao).getByDescriptionOrName("example of description", "asc");
     }
 
     @Test
-    void getByTag(){
+    void getByTag() throws SQLException {
 
         service.getByTagName("name", "asc", "description");
         verify(dao).getByTagName("name", "asc");

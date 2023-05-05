@@ -44,8 +44,13 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public GiftCertificate getById(int id) throws SQLException {
-        GiftCertificate certificate = jdbcTemplate.queryForObject(SQL_FIND_ENTITY, new GiftCertificateMapper(), id);
-        if (certificate == null) throw new SQLException();
+        GiftCertificate certificate = null;
+        try {
+            certificate = jdbcTemplate.queryForObject(SQL_FIND_ENTITY, new GiftCertificateMapper(), id);
+        } catch (Exception e) {
+            System.out.println("Can't get gift certificate with id " + id);
+            throw new SQLException();
+        }
         return certificate;
     }
 

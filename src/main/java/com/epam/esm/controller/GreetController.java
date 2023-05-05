@@ -7,22 +7,35 @@ import com.epam.esm.repository.entities.Tag;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
 public class GreetController {
 
-    @ExceptionHandler
+    @ExceptionHandler(DbException.class)
     public ResponseEntity<ErrorResponse> handleException(DbException exc){
         ErrorResponse err = new ErrorResponse();
-        err.setErrorCode(exc.getErrorCode());
+        err.setStatus(exc.getStatus());
         err.setMessage(exc.getMessage());
         err.setTimeStamp(System.currentTimeMillis());
         return new ResponseEntity<>(err, exc.getStatus());
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoHandlerFoundException(NoHandlerFoundException exc) {
+        ErrorResponse err = new ErrorResponse();
+        err.setStatus(HttpStatus.NOT_FOUND);
+        err.setMessage("Endpoint "+exc.getRequestURL()+" not found");
+        err.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
     }
 
     @Autowired
@@ -107,5 +120,14 @@ public class GreetController {
     public boolean deleteTag(@PathVariable int id)
     {
         return tagService.delete(id);
+    }
+
+    @RequestMapping(value = "{path:[^\\.]*}")
+    public void handleNotFound(HttpServletRequest request) throws NoHandlerFoundException {
+        String httpMethod = request.getMethod();
+        String requestUrl = request.getRequestURI();
+        HttpHeaders headers = new HttpHeaders();
+
+        throw new NoHandlerFoundException(httpMethod, requestUrl, headers);
     }
 }

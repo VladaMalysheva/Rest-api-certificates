@@ -36,8 +36,12 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag getById(int id) throws SQLException {
-        Tag tag = jdbcTemplate.queryForObject(SQL_FIND_ENTITY, new TagMapper(), id);
-        if (tag == null) throw new SQLException();
+        Tag tag = null;
+        try {
+            tag = jdbcTemplate.queryForObject(SQL_FIND_ENTITY, new TagMapper(), id);
+        } catch (Exception e) {
+            throw new SQLException();
+        }
         return tag;
     }
 

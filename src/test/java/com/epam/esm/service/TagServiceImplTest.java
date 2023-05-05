@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
@@ -24,7 +26,7 @@ class TagServiceImplTest {
     }
 
     @Test
-    void save() {
+    void save() throws SQLException {
         Tag tag = new Tag("tag1");
         //when
         service.save(tag);
@@ -33,7 +35,7 @@ class TagServiceImplTest {
     }
 
     @Test
-    void getById() {
+    void getById() throws SQLException {
         //when
         service.getById(1);
         //then
@@ -41,13 +43,13 @@ class TagServiceImplTest {
     }
 
     @Test
-    void getAll() {
+    void getAll() throws SQLException {
         service.getAll();
         verify(dao).getAll();
     }
 
     @Test
-    void delete() {
+    void delete() throws SQLException {
         service.delete(1);
         verify(dao).delete(1);
     }
